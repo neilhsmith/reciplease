@@ -1,6 +1,10 @@
 import { defineConfig, mergeConfig } from "vite";
 
-import viteConfig from "./vite.config";
+import viteConfigFn from "./vite.config";
+
+process.env.VITEST = "true";
+
+const viteConfig = viteConfigFn({ command: "serve", mode: "test" });
 
 export default mergeConfig(
   viteConfig,

@@ -82,6 +82,24 @@ Make sure to deploy the output of `npm run build`
 
 This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
 
+## Sentry Error Monitoring
+
+This project uses [Sentry](https://sentry.io/) for error and performance monitoring.
+
+### Setup
+
+1. Sign up at [Sentry.io](https://sentry.io/) and create a new project to get your DSN.
+2. Open `app/root.tsx` and replace `YOUR_SENTRY_DSN_HERE` with your actual DSN:
+
+```js
+Sentry.init({
+  dsn: "YOUR_SENTRY_DSN_HERE",
+  // ...other options
+});
+```
+
+3. (Optional) Configure additional Sentry options as needed. See the [Sentry React docs](https://docs.sentry.io/platforms/javascript/guides/react/) for more details.
+
 ---
 
 Built with ❤️ using React Router.

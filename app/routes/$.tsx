@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
-import { Link, useLocation, useMatch, useNavigate } from "react-router";
+import { useEffect } from "react";
+import { Link, useRouteError } from "react-router";
 
 import { Button } from "@/core/components/ui/button";
 
@@ -17,43 +18,24 @@ export default function NotFoundRoute() {
 }
 
 export function ErrorBoundary() {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const error = useRouteError();
 
-  // Compute the parent path
-  const path = location.pathname;
-  let parentPath = "/";
-  if (path !== "/") {
-    // Remove trailing slash if present
-    const trimmed = path.endsWith("/") && path.length > 1 ? path.slice(0, -1) : path;
-    const segments = trimmed.split("/");
-    if (segments.length > 2) {
-      parentPath = segments.slice(0, -1).join("/") || "/";
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.error("Route error:", error);
     }
-  }
-
-  // Use useMatch to check if the parent path is a valid route (not home)
-  // If parentPath is not "/" and matches a route, show Go Back, else Go Home
-  const parentMatch = useMatch(parentPath);
-
-  const canGoBack = path !== "/" && parentPath !== "/" && parentPath !== path && parentMatch;
+  }, [error]);
 
   return (
     <main>
       <section>
         <h1>Oops!</h1>
         <p>We couldn&apos;t find the page you were looking for.</p>
-        {canGoBack ? (
-          <Button type="button" onClick={() => navigate(-1)}>
-            <ArrowLeft /> Go Back
-          </Button>
-        ) : (
-          <Button asChild>
-            <Link to="/">
-              <ArrowLeft /> Go Home
-            </Link>
-          </Button>
-        )}
+        <Button asChild>
+          <Link to="/">
+            <ArrowLeft /> Go Home
+          </Link>
+        </Button>
       </section>
     </main>
   );
