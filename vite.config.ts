@@ -11,7 +11,7 @@ const sentryConfig: SentryReactRouterBuildOptions = {
 };
 
 const baseConfig = {
-  plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
+  plugins: [tailwindcss(), tsconfigPaths()],
   server: {
     port: 3000,
   },
@@ -24,6 +24,6 @@ export default defineConfig((config) => {
 
   return {
     ...baseConfig,
-    plugins: [...baseConfig.plugins, sentryReactRouter(sentryConfig, config)],
+    plugins: [...baseConfig.plugins, reactRouter(), sentryReactRouter(sentryConfig, config)],
   };
 });

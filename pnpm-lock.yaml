@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@nichtsam/helmet':
+        specifier: ^0.3.1
+        version: 0.3.1
       '@radix-ui/react-slot':
         specifier: ^1.2.3
         version: 1.2.3(@types/react@19.1.8)(react@19.1.0)
@@ -571,6 +574,10 @@ packages:
 
   '@mjackson/node-fetch-server@0.2.0':
     resolution: {integrity: sha512-EMlH1e30yzmTpGLQjlFmaDAjyOeZhng1/XCd7DExR8PNAnG/G1tyruZxEoUe11ClnwGhGrtsdnyyUx1frSzjng==}
+
+  '@nichtsam/helmet@0.3.1':
+    resolution: {integrity: sha512-+QZo63klL3+K/nGTyrvlsuzwnUFc3sxkIYTydwxNkjzQcKz4HHFx+YPN80QqB/wBriW9OmwYl/ZGKPbCRJXfVQ==}
+    engines: {node: '>=22'}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4005,6 +4012,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.4
 
   '@mjackson/node-fetch-server@0.2.0': {}
+
+  '@nichtsam/helmet@0.3.1': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
