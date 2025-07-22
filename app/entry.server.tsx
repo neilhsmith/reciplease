@@ -56,13 +56,11 @@ const handleRequest = function handleRequest(
           reject(error);
         },
         onError(error: unknown) {
-          // eslint-disable-next-line no-param-reassign
           responseStatusCode = 500;
           // Log streaming rendering errors from inside the shell.  Don't log
           // errors encountered during initial shell rendering since they'll
           // reject and get logged in handleDocumentRequest.
           if (shellRendered) {
-            // eslint-disable-next-line no-console
             console.error(error);
           }
         },
