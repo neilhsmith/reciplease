@@ -21,7 +21,7 @@ A modern, production-ready template for building full-stack React applications u
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Development
@@ -29,77 +29,108 @@ npm install
 Start the development server with HMR:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Your application will be available at `http://localhost:3000`.
 
 ## Building for Production
 
 Create a production build:
 
 ```bash
-npm run build
+pnpm build
 ```
 
-## Deployment
+## Logging / Monitoring
 
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+Import the logging utils from `@/monitoring/logger`:
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+import {
+  logger,
+  addBreadcrumb,
+  captureEvent,
+  captureException,
+  captureMessage,
+  flush,
+  startSpan,
+  wrapServerAction,
+  wrapServerLoader
+} from "@/monitoring/logger";
 ```
 
-## Styling
+Thrown exceptions, client and server side, will be captured. Console logs will also be captured following these rules - server (all console output), client (info, warn, error).
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+Forward caught exceptions with `captureException`.
 
-## Sentry Error Monitoring
-
-This project uses [Sentry](https://sentry.io/) for error and performance monitoring.
-
-### Setup
-
-1. Sign up at [Sentry.io](https://sentry.io/) and create a new project to get your DSN.
-2. Open `app/root.tsx` and replace `YOUR_SENTRY_DSN_HERE` with your actual DSN:
-
-```js
-Sentry.init({
-  dsn: "YOUR_SENTRY_DSN_HERE",
-  // ...other options
-});
+```
+try {
+  throw new Exception("some error");
+} catch (error) {
+  // ...
+  captureException(error);
+}
 ```
 
-3. (Optional) Configure additional Sentry options as needed. See the [Sentry React docs](https://docs.sentry.io/platforms/javascript/guides/react/) for more details.
+Wrap server actions and loaders to assign a span to the action or loader.
 
----
+```
+export const loader = wrapServerLoader({ name: "some-loader" },
+  async () => {
+    return {};
+  }
+);
 
-Built with ❤️ using React Router.
+export const action = wrapServerAction({ name: "some-action" },
+  async () => {
+    return {};
+  }
+);
+
+```
+
+Use `addBreadcrumb` to add information about steps that happened prior to an event.
+
+```
+
+addBreadcrumb({
+  category: "auth",
+  message: "User clicked login link",
+  level: "info"
+})
+
+```
+
+`captureMessage` sends a custom message to Sentry as an informational log or warning. Messages show up as issues on your issue stream.
+
+```
+
+captureMessage("Something went wrong");
+captureMessage("Something went very wrong", "fatal");
+
+```
+
+`startSpan` to manually start a span for actions you wish to record:
+
+```
+const result = await startSpan({ name: "Important Function" },
+  async () => {
+    const res = await doSomethingAsync();
+    return updateRes(res);
+  }
+);
+
+```
+
+A typical logger is available:
+
+```
+logger.debug("some message...", { foo: bar });
+logger.error("some message...", { foo: bar });
+logger.fatal("some message...", { foo: bar });
+logger.fmt("some message...", { foo: bar });
+logger.info("some message...", { foo: bar });
+logger.trace("some message...", { foo: bar });
+logger.warn("some message...", { foo: bar });
+```

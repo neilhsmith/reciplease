@@ -1,8 +1,10 @@
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
-import { Link, useRouteError } from "react-router";
+import { Link, useLocation, useRouteError } from "react-router";
 
 import { Button } from "@/core/components/ui/button";
+
+import { logger } from "@/monitoring/logger";
 
 export function loader() {
   throw new Response("Not Found", { status: 404 });
@@ -18,13 +20,16 @@ export default function NotFoundRoute() {
 }
 
 export function ErrorBoundary() {
-  const error = useRouteError();
+  const error = useRouteError() as { data: string; status: number };
+  const location = useLocation();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      console.error("Route error:", error);
+      const label = `Route error (${error.status} ${error.data}) ${JSON.stringify(location)}`;
+      const payload = { error, location };
+      logger.error(label, payload);
     }
-  }, [error]);
+  }, [error, location]);
 
   return (
     <main>

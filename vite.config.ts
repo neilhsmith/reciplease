@@ -12,6 +12,9 @@ const sentryConfig: SentryReactRouterBuildOptions = {
 
 const baseConfig = {
   plugins: [tailwindcss(), tsconfigPaths()],
+  build: {
+    sourcemap: true,
+  },
   server: {
     port: 3000,
   },

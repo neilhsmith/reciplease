@@ -33,7 +33,7 @@ export function Welcome() {
                 </li>
               ))}
               <li key="about">
-                <Link to="/about">about</Link>
+                <Link to="/about">about gg</Link>
               </li>
             </ul>
           </nav>

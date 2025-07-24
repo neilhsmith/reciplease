@@ -8,7 +8,7 @@
   "tailwindFunctions": ["clsx", "cn", "cva"],
   "tailwindStylesheet": "./app/styles/app.css",
 
-  "importOrder": ["@/styles/app.css", ".\\/\\+types/", "<THIRD_PARTY_MODULES>", "^[@]\\/core\\/", "^[@]\\/", "^[./]"],
+  "importOrder": ["dotenv/config", ".\\/\\+types/", "<THIRD_PARTY_MODULES>", "^[@]\\/core\\/", "^[@]\\/", "^[./]"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true
 }

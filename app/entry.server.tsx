@@ -42,7 +42,7 @@ const handleRequest = function handleRequest(
           responseHeaders.set("Content-Type", "text/html");
           //responseHeaders.append('Server-Timing', timings.toString())
 
-          if (process.env.SENTRY_DSN) {
+          if (process.env.VITE_SENTRY_DSN) {
             responseHeaders.append("Document-Policy", "js-profiling");
           }
 
@@ -55,7 +55,7 @@ const handleRequest = function handleRequest(
                 fetch: {
                   "connect-src": [
                     MODE === "development" ? "ws:" : undefined,
-                    process.env.SENTRY_DSN ? "*.sentry.io" : undefined,
+                    process.env.VITE_SENTRY_DSN ? "*.sentry.io" : undefined,
                     "'self'",
                   ],
                   "font-src": ["'self'", "https://fonts.gstatic.com"],
