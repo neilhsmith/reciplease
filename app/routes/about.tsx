@@ -1,5 +1,5 @@
 export async function loader() {
-  throw new Error("Sentry Test Error");
+  //throw new Error("Sentry Test Error");
 }
 
 export default function AboutRoute() {
