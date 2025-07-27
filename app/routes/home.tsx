@@ -17,8 +17,9 @@ export const loader = wrapServerLoader(
   {
     name: "home-loader",
   },
-  async () => {
+  async ({ context }) => {
     //throw new Error("testing thrown error from loader ppp");
+    console.log("context", context);
     captureMessage("testing captureMessage from loader bbbb");
     return {};
   },

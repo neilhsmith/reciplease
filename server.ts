@@ -3,11 +3,14 @@ import { ip as ipAddress } from "address";
 import closeWithGrace from "close-with-grace";
 import compression from "compression";
 import express from "express";
+import rateLimit from "express-rate-limit";
 import getPort, { portNumbers } from "get-port";
 import { styleText } from "node:util";
+import "react-router";
 
 const MODE = process.env.NODE_ENV ?? "development";
 const IS_DEV = MODE === "development";
+const IS_PROD = MODE === "production";
 const BUILD_PATH = "./build/server/index.js";
 const PORT = Number.parseInt(process.env.PORT || "3000");
 const SENTRY_ENABLED = !!process.env.VITE_SENTRY_DSN;
@@ -38,6 +41,56 @@ app.disable("x-powered-by");
 //     next();
 //   }
 // });
+
+const maxMultiple = !IS_PROD || process.env.PLAYWRIGHT_TEST_BASE_URL ? 10_000 : 1;
+const rateLimitDefault = {
+  windowMs: 60 * 1000,
+  limit: 1000 * maxMultiple,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: { trustProxy: false },
+};
+
+const strongestRateLimit = rateLimit({
+  ...rateLimitDefault,
+  windowMs: 60 * 1000,
+  limit: 10 * maxMultiple,
+});
+
+const strongRateLimit = rateLimit({
+  ...rateLimitDefault,
+  windowMs: 60 * 1000,
+  limit: 100 * maxMultiple,
+});
+
+const generalRateLimit = rateLimit(rateLimitDefault);
+app.use((req, res, next) => {
+  const strongPaths = [
+    "/login",
+    "/signup",
+    "/verify",
+    "/admin",
+    "/onboarding",
+    "/reset-password",
+    "/settings/profile",
+    "/resources/login",
+    "/resources/verify",
+  ];
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    if (strongPaths.some((p) => req.path.includes(p))) {
+      return strongestRateLimit(req, res, next);
+    }
+    return strongRateLimit(req, res, next);
+  }
+
+  // the verify route is a special case because it's a GET route that
+  // can have a token in the query string
+  if (req.path.includes("/verify")) {
+    return strongestRateLimit(req, res, next);
+  }
+
+  return generalRateLimit(req, res, next);
+});
 
 if (IS_DEV) {
   console.log("Starting development server");
