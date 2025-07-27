@@ -3,7 +3,7 @@ import { hydrateRoot } from "react-dom/client";
 import { HydratedRouter } from "react-router/dom";
 
 if (import.meta.env.VITE_SENTRY_DSN) {
-  void import("./monitoring/monitoring.client").then(({ init }) => init());
+  void import("./monitoring/instrument.client").then(({ init }) => init());
 }
 
 startTransition(() => {

@@ -4,7 +4,7 @@ import { Link, useLocation, useRouteError } from "react-router";
 
 import { Button } from "@/core/components/ui/button";
 
-import { logger } from "@/monitoring/logger";
+//import { logger } from "@/monitoring/logger";
 
 export function loader() {
   throw new Response("Not Found", { status: 404 });
@@ -25,9 +25,9 @@ export function ErrorBoundary() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const label = `Route error (${error.status} ${error.data}) ${JSON.stringify(location)}`;
-      const payload = { error, location };
-      logger.error(label, payload);
+      //const label = `Route error (${error.status} ${error.data}) ${JSON.stringify(location)}`;
+      //const payload = { error, location };
+      //logger.error(label, payload);
     }
   }, [error, location]);
 

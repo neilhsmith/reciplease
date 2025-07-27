@@ -27,6 +27,14 @@ export default defineConfig((config) => {
 
   return {
     ...baseConfig,
+    build: {
+      ...baseConfig.build,
+      rollupOptions: config.isSsrBuild
+        ? {
+            input: "./server/app.ts",
+          }
+        : undefined,
+    },
     plugins: [...baseConfig.plugins, reactRouter(), sentryReactRouter(sentryConfig, config)],
   };
 });

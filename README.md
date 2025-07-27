@@ -3,6 +3,10 @@
 ## TODO
 
 - [ ] set sane trace / profile rates in sentry configs
+- [ ] redo logs
+  - [x] disable sentry logging, remove the logger
+  - [ ] add winston & setup file / console logging, plan for dev / prod envs, make sure it logs everything
+  - [ ] add winston-sentry transport, enable sentry logging
 
 ## Getting Started
 
@@ -124,3 +128,5 @@ logger.info("some message...", { foo: bar });
 logger.trace("some message...", { foo: bar });
 logger.warn("some message...", { foo: bar });
 ```
+
+**Note**: The server side instrumentation is started via the npm script's NODE_OPTIONS --import flag. If it's not possible to set that flag in your hosting environment see the [Sentry - Update Scripts doc](https://docs.sentry.io/platforms/javascript/guides/react-router/#update-scripts) for alternative instructions.
