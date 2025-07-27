@@ -3,9 +3,10 @@ import { createReadableStreamFromReadable } from "@react-router/node";
 import { getMetaTagTransformer, wrapSentryHandleRequest } from "@sentry/react-router";
 import * as Sentry from "@sentry/react-router";
 import { isbot } from "isbot";
+import crypto from "node:crypto";
 import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
-import { type AppLoadContext, type EntryContext, ServerRouter } from "react-router";
+import { type EntryContext, ServerRouter } from "react-router";
 import { type HandleErrorFunction } from "react-router";
 
 import { NonceProvider } from "@/core/lib/nonce";
@@ -19,16 +20,13 @@ const handleRequest = function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   reactRouterContext: EntryContext,
-  loadContext: AppLoadContext,
+  //loadContext: AppLoadContext,
 ): Promise<Response> {
   const callbackName = isbot(request.headers.get("user-agent")) ? "onAllReady" : "onShellReady";
-  const nonce = loadContext.nonce;
+  const nonce = crypto.randomBytes(16).toString("hex");
 
   return new Promise((resolve, reject) => {
     let didError = false;
-    // NOTE: this timing will only include things that are rendered in the shell
-    // and will not include suspended components and deferred loaders
-    // const timings = makeTimings('render', 'renderToPipeableStream')
 
     const { pipe, abort } = renderToPipeableStream(
       <NonceProvider value={nonce}>
@@ -89,14 +87,12 @@ const handleRequest = function handleRequest(
   });
 };
 
-// wrap the default export
 export default wrapSentryHandleRequest(handleRequest);
 
 export const handleError: HandleErrorFunction = (error, { request }) => {
   // React Router may abort some interrupted requests, don't log those
   if (!request.signal.aborted) {
     Sentry.captureException(error);
-    // optionally log the error so you can see it
     console.error(error);
   }
 };
