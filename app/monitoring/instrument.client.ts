@@ -1,6 +1,5 @@
 import * as Sentry from "@sentry/react-router";
 
-console.log("APP_ENV", import.meta.env.VITE_APP_ENV);
 export function init() {
   Sentry.init({
     dsn: import.meta.env.VITE_SENTRY_DSN,
