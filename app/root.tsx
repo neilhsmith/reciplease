@@ -24,6 +24,10 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+export function loader() {
+  return {};
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const nonce = useNonce();
 

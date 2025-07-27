@@ -3,7 +3,6 @@ import { createReadableStreamFromReadable } from "@react-router/node";
 import { getMetaTagTransformer, wrapSentryHandleRequest } from "@sentry/react-router";
 import * as Sentry from "@sentry/react-router";
 import { isbot } from "isbot";
-import crypto from "node:crypto";
 import { PassThrough } from "node:stream";
 import { renderToPipeableStream } from "react-dom/server";
 import { type AppLoadContext, type EntryContext, ServerRouter } from "react-router";
@@ -20,11 +19,10 @@ const handleRequest = function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   reactRouterContext: EntryContext,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext,
 ): Promise<Response> {
   const callbackName = isbot(request.headers.get("user-agent")) ? "onAllReady" : "onShellReady";
-  const nonce = crypto.randomBytes(16).toString("hex");
+  const nonce = loadContext.nonce;
 
   return new Promise((resolve, reject) => {
     let didError = false;

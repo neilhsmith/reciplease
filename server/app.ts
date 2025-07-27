@@ -1,10 +1,11 @@
 import { createRequestHandler } from "@react-router/express";
 import express from "express";
+import crypto from "node:crypto";
 import "react-router";
 
 declare module "react-router" {
   interface AppLoadContext {
-    VALUE_FROM_EXPRESS: string;
+    nonce: string;
   }
 }
 
@@ -15,7 +16,7 @@ app.use(
     build: () => import("virtual:react-router/server-build"),
     getLoadContext() {
       return {
-        VALUE_FROM_EXPRESS: "Hello from Express",
+        nonce: crypto.randomBytes(16).toString("hex"),
       };
     },
   }),
