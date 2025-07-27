@@ -23,8 +23,7 @@ app.use((req, res, next) => {
 
   res.on("finish", () => {
     const durationMs = Number(process.hrtime.bigint() - start) / 1_000_000;
-    const log = `${req.method} ${req.originalUrl} ${res.statusCode} - ${durationMs.toFixed(2)} ms`;
-
+    const log = `${req.method} ${req.originalUrl} ${res.statusCode} - ${durationMs.toFixed(2)}ms - ${JSON.stringify(req.body)}`;
     console.log(log);
   });
 
